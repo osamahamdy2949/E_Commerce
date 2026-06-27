@@ -16,10 +16,10 @@ namespace E_Commerce.Infrastructure.Repositories
 
         public void Delete(TEntity entity) => dbContext.Set<TEntity>().Remove(entity);
 
-        public async Task<IReadOnlyList<TEntity>> GetAll(CancellationToken ct = default)
+        public async Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken ct = default)
             => await dbContext.Set<TEntity>().ToListAsync(ct);
 
-        public async Task<TEntity?> GetById(TKey id, CancellationToken ct = default)
+        public async Task<TEntity?> GetByIdAsync(TKey id, CancellationToken ct = default)
             => await dbContext.Set<TEntity>().FindAsync(id, ct);
 
         public void Update(TEntity entity) => dbContext.Set<TEntity>().Update(entity);

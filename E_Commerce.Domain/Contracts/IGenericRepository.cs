@@ -13,7 +13,7 @@ namespace E_Commerce.Domain.Contracts
         void Delete(TEntity entity);
         void Update(TEntity entity);
 
-        Task<IReadOnlyList<TEntity>> GetAll(CancellationToken ct = default);
-        Task<TEntity?> GetById(TKey id, CancellationToken ct = default);
+        Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken ct = default);
+        Task<TEntity?> GetByIdAsync(TKey id, CancellationToken ct = default);
     }
 }
