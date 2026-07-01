@@ -19,7 +19,7 @@ namespace E_Commerce.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetAllProductsAsync([FromQuery]ProductQueryParams queryParams, CancellationToken ct)
+        public async Task<ActionResult<PaginationResult<ProductDto>>> GetAllProductsAsync([FromQuery]ProductQueryParams queryParams, CancellationToken ct)
         {
             var products = await _productServices.GetAllProductsAsync(queryParams, ct);
             return ToActionResult(products);
