@@ -32,6 +32,7 @@ namespace E_Commerce.Infrastructure
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddSingleton<ICashRepository, CashRepository>();
 
             return services;
         }

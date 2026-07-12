@@ -1,4 +1,5 @@
-﻿using E_Commerce.Application.Common;
+﻿using E_Commerce.API.Attributes;
+using E_Commerce.Application.Common;
 using E_Commerce.Application.Contracts;
 using E_Commerce.Application.DTOs.Products;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace E_Commerce.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [RedisCash]
         public async Task<ActionResult<PaginationResult<ProductDto>>> GetAllProductsAsync([FromQuery]ProductQueryParams queryParams, CancellationToken ct)
         {
             var products = await _productServices.GetAllProductsAsync(queryParams, ct);
