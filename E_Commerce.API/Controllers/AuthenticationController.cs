@@ -13,8 +13,11 @@ namespace E_Commerce.API.Controllers
         {
             _authenticationServices = authenticationServices;
         }
-        [HttpPost("Login")]
-        public async Task<ActionResult<UserDto>> Login(LoginDto login)
-            => ToActionResult(await _authenticationServices.LoginAsync(login));
+        [HttpPost("login")]
+        public async Task<ActionResult<UserDto>> Login(LoginDto login , CancellationToken ct)
+            => ToActionResult(await _authenticationServices.LoginAsync(login, ct));
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterDto register, CancellationToken ct)
+            => ToActionResult(await _authenticationServices.RegisterAsync(register, ct));
     }
 }
