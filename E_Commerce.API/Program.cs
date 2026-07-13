@@ -2,6 +2,8 @@ using E_Commerce.API.Extentions;
 using E_Commerce.Application;
 using E_Commerce.Domain.Contracts;
 using E_Commerce.Infrastructure;
+using E_Commerce.Infrastructure.Identity.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using static E_Commerce.Application.Profiles.PictureUrlResolver;
 
