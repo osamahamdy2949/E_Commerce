@@ -12,10 +12,12 @@ namespace E_Commerce.Application.Services
     internal class AuthenticationServices : IAuthenticationServices
     {
         private readonly IIdentityServices _identityServices;
+        private readonly ITokenServices _tokenServices;
 
-        public AuthenticationServices(IIdentityServices identityServices)
+        public AuthenticationServices(IIdentityServices identityServices, ITokenServices tokenServices)
         {
             _identityServices = identityServices;
+            _tokenServices = tokenServices;
         }
         public async Task<Result<UserDto>> LoginAsync(LoginDto login, CancellationToken ct = default)
         {
@@ -37,11 +39,16 @@ namespace E_Commerce.Application.Services
                 return Result<UserDto>.Fail(Error.UnAuthorized("Invalid Email Or Password"));
             }
 
+            var user = userResult.Data;
+            var rolesResult = await _identityServices.GetUserRolesAsync(user.Email);
+            var roles = rolesResult.Data;
+            var token = _tokenServices.CreateToken(user.Id, user.Email, user.Username,roles);
+
             return new UserDto()
             {
                 Email = login.Email,
                 DisplayName = userResult.Data.DisplayName,
-                Token = "Token"
+                Token = token
             };
         }
 
@@ -54,11 +61,16 @@ namespace E_Commerce.Application.Services
                 return Result<UserDto>.Fail(userResult.Errors);
             }
 
+            var user = userResult.Data;
+            var rolesResult = await _identityServices.GetUserRolesAsync(user.Email);
+            var roles = rolesResult.Data;
+            var token = _tokenServices.CreateToken(user.Id, user.Email, user.Username, roles);
+
             return Result<UserDto>.Ok(new UserDto()
             {
                 Email = register.Email,
                 DisplayName = register.DispalyName,
-                Token = "Token"
+                Token = token
             });
         }
     }
