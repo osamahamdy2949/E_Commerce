@@ -23,6 +23,17 @@ namespace E_Commerce.Application.Services
         public async Task<Result<bool>> CheckEmailExistsAsync(string email, CancellationToken ct = default)
             => await _identityServices.IsEmailExistsAsync(email, ct);
 
+        public async Task<Result<UserDto>> GetCurrentUserAsync(string email, CancellationToken ct = default)
+        {
+            var userResult = await _identityServices.FindUserByEmailAsync(email, ct);
+            var user = userResult.Data;
+            var roleResult = await _identityServices.GetUserRolesAsync(email, ct);
+            var roles = roleResult.Data;
+
+            var token = _tokenServices.CreateToken(user.Id, user.Email, user.Username, roles);
+            return new UserDto() { Email = user.Email, DisplayName = user.DisplayName, Token = token };
+        }
+
         public async Task<Result<UserDto>> LoginAsync(LoginDto login, CancellationToken ct = default)
         {
             var userResult = await _identityServices.FindUserByEmailAsync(login.Email, ct);
