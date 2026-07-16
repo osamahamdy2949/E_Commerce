@@ -34,6 +34,11 @@ namespace E_Commerce.Application.Services
             return new UserDto() { Email = user.Email, DisplayName = user.DisplayName, Token = token };
         }
 
+        public async Task<Result<AddressDto>> GetUserAddressAsync(string email, CancellationToken ct = default)
+        {
+            return await _identityServices.GetUserAddressByEmailAsync(email, ct);
+        }
+
         public async Task<Result<UserDto>> LoginAsync(LoginDto login, CancellationToken ct = default)
         {
             var userResult = await _identityServices.FindUserByEmailAsync(login.Email, ct);
@@ -87,6 +92,11 @@ namespace E_Commerce.Application.Services
                 DisplayName = register.DispalyName,
                 Token = token
             });
+        }
+
+        public async Task<Result<AddressDto>> UpdateOrInsertUserAddressAsync(string email, AddressDto address, CancellationToken ct = default)
+        {
+            return await _identityServices.UpdateOrInsertUserAddressAsync(email, address, ct);
         }
     }
 }

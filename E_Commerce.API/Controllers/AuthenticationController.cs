@@ -16,24 +16,42 @@ namespace E_Commerce.API.Controllers
             _authenticationServices = authenticationServices;
         }
         [HttpPost("login")]
-        public async Task<ActionResult<UserDto>> Login(LoginDto login , CancellationToken ct)
+        public async Task<ActionResult<UserDto>> Login(LoginDto login, CancellationToken ct)
             => ToActionResult(await _authenticationServices.LoginAsync(login, ct));
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto register, CancellationToken ct)
             => ToActionResult(await _authenticationServices.RegisterAsync(register, ct));
 
         [HttpGet("emailexists")]
-        public async Task<ActionResult<bool>> EmailExists([FromQuery]string email, CancellationToken ct)
+        public async Task<ActionResult<bool>> EmailExists([FromQuery] string email, CancellationToken ct)
             => ToActionResult(await _authenticationServices.CheckEmailExistsAsync(email, ct));
 
         [Authorize]
         [HttpGet("currentuser")]
         public async Task<ActionResult<UserDto>> CurrentUser(CancellationToken ct)
         {
-            var email = User.FindFirstValue(ClaimTypes.Email) 
+            var email = User.FindFirstValue(ClaimTypes.Email)
                 ?? throw new UnauthorizedAccessException("No Email Claims Found");
 
             return ToActionResult(await _authenticationServices.GetCurrentUserAsync(email, ct));
+        }
+
+        [Authorize]
+        [HttpGet("useraddress")]
+        public async Task<ActionResult<AddressDto>> CurrentUserAddress(CancellationToken ct)
+        {
+            var email = GetEmailFromToken();
+
+            return ToActionResult(await _authenticationServices.GetUserAddressAsync(email, ct));
+        }
+
+        [Authorize]
+        [HttpPut("useraddress")]
+        public async Task<ActionResult<AddressDto>> UpdateOrInsertuserAdress(AddressDto address, CancellationToken ct)
+        {
+            var email = GetEmailFromToken();
+
+            return ToActionResult(await _authenticationServices.UpdateOrInsertUserAddressAsync(email, address, ct));
         }
     }
 }
