@@ -81,5 +81,8 @@ namespace E_Commerce.Infrastructure.Identity.Services
             return roles.ToList();
 
         }
+
+        public async Task<Result<bool>> IsEmailExistsAsync(string email, CancellationToken ct = default)
+            => await _userManager.FindByEmailAsync(email) is not null;
     }
 }

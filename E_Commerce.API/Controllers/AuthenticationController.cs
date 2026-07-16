@@ -19,5 +19,9 @@ namespace E_Commerce.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto register, CancellationToken ct)
             => ToActionResult(await _authenticationServices.RegisterAsync(register, ct));
+
+        [HttpGet("emailexists")]
+        public async Task<ActionResult<bool>> EmailExists([FromQuery]string email, CancellationToken ct)
+            => ToActionResult(await _authenticationServices.CheckEmailExistsAsync(email, ct));
     }
 }
