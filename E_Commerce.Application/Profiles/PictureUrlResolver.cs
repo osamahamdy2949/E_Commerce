@@ -12,9 +12,9 @@ namespace E_Commerce.Application.Profiles
 {
     public class PictureUrlResolver : IValueResolver<Product, ProductDto, string>
     {
-        private readonly UrlSetting _urlSetting;
+        private readonly UrlSettings _urlSetting;
 
-        public PictureUrlResolver(IOptions<UrlSetting> options)
+        public PictureUrlResolver(IOptions<UrlSettings> options)
         {
             _urlSetting = options.Value;
         }
@@ -26,7 +26,7 @@ namespace E_Commerce.Application.Profiles
             return $"{baseUrl}/Files/{path}";
         }
 
-        public class UrlSetting
+        public class UrlSettings
         {
             public string BaseUrl { get; set; } = default!;
         }

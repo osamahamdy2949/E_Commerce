@@ -13,6 +13,7 @@ namespace E_Commerce.Application
             services.AddScoped<IBasketServices, BasketService>();
             services.AddSingleton<ICashServices,CashServices>();
             services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+            services.AddScoped<IOrderServices, OrderServices>();
 
             return services;
         }

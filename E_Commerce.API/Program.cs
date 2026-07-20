@@ -23,7 +23,7 @@ namespace E_Commerce.API
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
 
-            builder.Services.Configure<UrlSetting>(builder.Configuration.GetSection("UrlSettings"));
+            builder.Services.Configure<UrlSettings>(builder.Configuration.GetSection("UrlSettings"));
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JWT"));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
