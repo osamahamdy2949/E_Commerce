@@ -89,5 +89,47 @@ namespace E_Commerce.Application.Services
                 return _mapper.Map<OrderToReturnDto>(newOrder);
             }
         }
+
+        public async Task<Result<IReadOnlyList<DeliveryMethodDto>>> GetAllDeliveryMethodAsync(CancellationToken ct = default)
+        {
+            var deliveryMethods = await _unitOfWork.GetRepository<DeliveryMethod,int>().GetAllAsync(ct);
+
+            if (deliveryMethods.Any())
+            {
+                return Result<IReadOnlyList<DeliveryMethodDto>>.Ok(_mapper.Map<IReadOnlyList<DeliveryMethodDto>>(deliveryMethods));
+            }
+            else
+            {
+                return Error.NotFound("No Delivery Methods Found");
+            }
+        }
+
+        public async Task<Result<IReadOnlyList<OrderToReturnDto>>> GetAllOrdersByEmailAsync(string email, CancellationToken ct = default)
+        {
+            var orders = await _unitOfWork.GetRepository<Order, Guid>().GetAllAsync(new OrderSpecifications(email), ct);
+
+            if(orders.Any())
+            {
+                return Result<IReadOnlyList<OrderToReturnDto>>.Ok(_mapper.Map<IReadOnlyList<OrderToReturnDto>>(orders));
+            }
+            else
+            {
+                return Error.NotFound("No Orders Found" , $"No Order For User With Email {email} Found");
+            }
+        }
+
+        public async Task<Result<OrderToReturnDto>> GetOrderByIdAndEmailAsync(Guid id, string email, CancellationToken ct = default)
+        {
+            var order = await _unitOfWork.GetRepository<Order, Guid>().GetByIdAsync(new OrderSpecifications(id,email), ct);
+
+            if (order != null)
+            {
+                return Result<OrderToReturnDto>.Ok(_mapper.Map<OrderToReturnDto>(order));
+            }
+            else
+            {
+                return Error.NotFound("Order Not Found", $"Order With Id {id} For User With Email {email} Not Found");
+            }
+        }
     }
 }

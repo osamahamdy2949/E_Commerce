@@ -20,5 +20,24 @@ namespace E_Commerce.API.Controllers
         {
             return ToActionResult(await _orderServices.CreateOrderAsync(orderDto, GetEmailFromToken(), ct));
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnDto>>> GetAllUserOrders(CancellationToken ct)
+        {
+            return ToActionResult(await _orderServices.GetAllOrdersByEmailAsync(GetEmailFromToken(), ct));
+        }
+        [Authorize]
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<OrderToReturnDto>> GetUserOrderById(Guid id, CancellationToken ct)
+        {
+            return ToActionResult(await _orderServices.GetOrderByIdAndEmailAsync(id, GetEmailFromToken(), ct));
+        }
+
+        [HttpGet("DeliveryMethods")]
+        public async Task<ActionResult<IReadOnlyList<DeliveryMethodDto>>> GetAllDeliveryMethods(CancellationToken ct)
+        {
+            return ToActionResult(await _orderServices.GetAllDeliveryMethodAsync(ct));
+        }
     }
 }
