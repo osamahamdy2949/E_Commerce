@@ -14,6 +14,7 @@ namespace E_Commerce.Application
             services.AddSingleton<ICashServices,CashServices>();
             services.AddScoped<IAuthenticationServices, AuthenticationServices>();
             services.AddScoped<IOrderServices, OrderServices>();
+            services.AddScoped<IPaymentServices, PaymentServices>();
 
             return services;
         }
