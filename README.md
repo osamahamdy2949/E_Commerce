@@ -10,7 +10,7 @@
 ![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe)
 ![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 
-Enterprise-grade **E-Commerce Web API** built with **.NET 8**, **ASP.NET Core Web API**, and **Clean Architecture (DDD Principles)**.
+Enterprise-grade **E-Commerce Web API** built with **.NET 8**, **ASP.NET Core Web API**, and **Onion Architecture)**.
 
 </div>
 
