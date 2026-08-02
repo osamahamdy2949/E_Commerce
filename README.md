@@ -1,189 +1,421 @@
-Here is the complete and raw `README.md` content formatted within a single block using five backticks, so all inner code blocks (like `mermaid` and directory structures) remain enclosed and ready to copy:
+# 🛒 E-Commerce Platform API
 
-`````markdown
-# Pharmacy Management System
+<div align="center">
 
-A premium, enterprise-grade **Pharmacy Management System (PMS)** built using a modern **3-Tier (N-Tier) Architecture** in **.NET 10** and **ASP.NET Core MVC**. 
+![.NET](https://img.shields.io/badge/.NET-8-512BD4?style=for-the-badge&logo=dotnet)
+![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-Web_API-512BD4?style=for-the-badge)
+![Entity Framework Core](https://img.shields.io/badge/EF_Core-8-6DB33F?style=for-the-badge)
+![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis)
+![Stripe](https://img.shields.io/badge/Stripe-635BFF?style=for-the-badge&logo=stripe)
+![License](https://img.shields.io/badge/License-MIT-success?style=for-the-badge)
 
-This system provides comprehensive automation for pharmacies, chemists, and drugstores—handling everything from Point-of-Sale (POS) cashier workflows and purchase management to batch-level medicine expiry tracking, employee shifts, role-based access control, audit logging, and advanced reporting with PDF/Excel generation.
+Enterprise-grade **E-Commerce Web API** built with **.NET 8**, **ASP.NET Core Web API**, and **Clean Architecture (DDD Principles)**.
+
+</div>
 
 ---
 
-## 🏗️ Architecture Overview
+# 📖 Overview
 
-The codebase is organized into three distinct layers, ensuring clean separation of concerns, high testability, and clear dependency management:
+The **E-Commerce Platform API** is a scalable backend solution designed for modern online stores.
+
+It provides a complete commerce workflow including:
+
+- 🛍️ Product Catalog
+- 🔍 Search, Filtering & Pagination
+- 🛒 Redis Shopping Basket
+- 💳 Stripe Payment Integration
+- 📦 Order Management
+- 🔐 JWT Authentication
+- 👤 ASP.NET Core Identity
+- 📄 Swagger Documentation
+- ⚡ Automatic Database Migration & Seeding
+
+---
+
+# 📑 Table of Contents
+
+- [Architecture](#-architecture)
+- [Technology Stack](#-technology-stack)
+- [Project Structure](#-project-structure)
+- [Features](#-features)
+- [Getting Started](#-getting-started)
+- [Environment Configuration](#-environment-configuration)
+- [Run the Application](#-run-the-application)
+
+---
+
+# 🏗 Architecture
+
+The solution follows **Clean Architecture**, separating business rules from infrastructure and presentation concerns.
 
 ```mermaid
 graph TD
-    PL[Presentation Layer: PharmacyManagement.PL] -->|Depends on| BLL[Business Logic Layer: PharmacyManagement.BLL]
-    PL -->|Depends on| DAL[Data Access Layer: PharmacyManagement.DAL]
-    BLL -->|Depends on| DAL
-```
+    API[Presentation Layer]
+    APP[Application Layer]
+    INF[Infrastructure Layer]
+    DOM[Domain Layer]
 
-### 1. [Presentation Layer (PL)](file:///c:/Users/AIuser/source/repos/PharmacyManagementSystem/PharmacyManagement.PL)
-* **Technology**: ASP.NET Core MVC (Targeting `.NET 10`).
-* **Responsibilities**: Handles user interaction, HTTP requests, UI rendering, cookie-based authentication, and custom middleware.
-* **Key Components**:
-  * **Controllers & Views**: Manage request routing and render HTML views utilizing Bootstrap.
-  * **Middlewares**: Custom request-processing pipelines, including:
-    * `LoginTrackingMiddleware`: Logs user login activities and session-related metadata.
-  * **Services**: Presentation-specific services such as `InvoicePdfService` for PDF delivery.
-
-### 2. [Business Logic Layer (BLL)](file:///c:/Users/AIuser/source/repos/PharmacyManagementSystem/PharmacyManagement.BLL)
-* **Technology**: C# Class Library.
-* **Responsibilities**: Executes domain business rules, processes calculations, coordinates transactions, validates input DTOs/ViewModels, and handles mapping.
-* **Key Components**:
-  * **Services**: Encapsulate core logic (e.g., `SalesService`, `PurchaseService`, `StockService`, `ReportService`, `NotificationService`).
-  * **ViewModels**: Data transfer objects customized for UI consumption.
-  * **Validators**: Powered by `FluentValidation` for strongly-typed, declarative model validation.
-  * **Mapping Profile**: Powered by `AutoMapper` to map between database entities and ViewModels.
-
-### 3. [Data Access Layer (DAL)](file:///c:/Users/AIuser/source/repos/PharmacyManagementSystem/PharmacyManagment.DAL)
-* **Technology**: C# Class Library with Entity Framework Core (EF Core 10).
-* **Responsibilities**: Manages database access, defines the persistence schema, implements repository patterns, and configures seeding.
-* **Key Components**:
-  * **DbContext**: `PharmacyDbContext` manages SQL Server connection configurations, entity configurations, and migrations.
-  * **Entities**: Domain entities (e.g., `Medicine`, `MedicineBatch`, `SalesInvoice`, `PurchaseInvoice`, `Shift`, `AuditLog`, `UserActivity`).
-  * **Repositories**: Standard Repository & Unit of Work patterns (`GenericRepository<T>` and `UnitOfWork`) to abstract database operations.
-  * **Seeding**: Automatically seeds identity roles, system users, and initial lookups.
-
----
-
-## 🛠️ Technology Stack & Libraries
-
-* **Framework**: .NET 10.0
-* **Web Engine**: ASP.NET Core MVC (Razor Views)
-* **ORM**: Entity Framework Core 10 (SQL Server provider)
-* **Database**: Microsoft SQL Server
-* **Authentication & RBAC**: ASP.NET Core Identity
-* **Validation**: FluentValidation (11.11.0)
-* **Object Mapping**: AutoMapper (16.1.1)
-* **PDF Document Design**: QuestPDF (2026.6.0)
-* **Excel Reporting**: ClosedXML (0.105.0)
-
----
-
-## 📂 Project Structure
-
-```
-PharmacyManagementSystem/
-│
-├── PharmacyManagementSystem.slnx        # Solution configuration file
-│
-├── PharmacyManagement.PL/               # Presentation Layer (MVC Web App)
-│   ├── Controllers/                     # Controllers for routing (Account, Medicine, POS, Reports, etc.)
-│   ├── Views/                           # Razor Views (.cshtml) grouped by controller
-│   ├── wwwroot/                         # Static assets (CSS, JS, images, icons)
-│   ├── Middlewares/                     # Custom request pipeline middlewares
-│   ├── Program.cs                       # Application entry point & configuration
-│   └── appsettings.json                 # Connection strings and app configuration
-│
-├── PharmacyManagement.BLL/              # Business Logic Layer (Services & DTOs)
-│   ├── Services/                        # Business logic interfaces & implementation classes
-│   ├── ViewModels/                      # Presentation-ready view models and DTOs
-│   ├── Validators/                      # FluentValidation classes
-│   └── Mapping/                         # AutoMapper profiles
-│
-└── PharmacyManagment.DAL/               # Data Access Layer (EF Core & Schema)
-    ├── Data/                            # DbContext, Entities, and migrations
-    ├── Repositories/                    # Repository and Unit of Work classes
-    └── SeedingData/                     # Seed scripts for default roles and databases
+    API --> APP
+    API --> INF
+    INF --> APP
+    APP --> DOM
 ```
 
 ---
 
-## 🌟 Key Modules & Features
+## 1️⃣ Domain Layer
 
-### 🛒 Point of Sale (POS) & Sales
-* Fast Cashier interface to search medicines and checkout.
-* Multi-item cart handling, calculating subtotals, VAT/taxes, discounts, and net totals.
-* **Invoice Generation**: Renders PDF receipt invoices dynamically using `QuestPDF`.
-* Automatic inventory validation and stock deduction during sales checkout.
+**Technology**
 
-### 📦 Inventory & Medicine Management
-* Complete profiles containing Trade Name, Scientific Name, Strength, Form, Barcode, and Category.
-* **Batch-Level Tracking**: Manages inventory at the batch level (`MedicineBatch` with SKU, batch number, manufacture date, and expiry date).
-* Active vs. Pending inventory configurations.
-* Automatic stock transaction ledger recording additions, sales, returns, and manual adjustments.
+- C# Class Library
 
-### ⚠️ Expiry & Stock Level Alerts
-* **Notification System**: Monitors stock levels and flags items dropping below `MinStockLevel`.
-* **Expiry Tracking**: Real-time identification of near-expiry and expired batches.
-* Automated dashboard alerts to prevent dispensing expired products.
+### Responsibilities
 
-### 🧾 Purchase & Supplier Management
-* Tracks purchases from suppliers and registers inbound invoices.
-* Ingests new medicine batches automatically, updating current stock levels and standardizing purchase unit conversion factors.
-* Compares purchase pricing history to help control margins.
+- Core business rules
+- Domain entities
+- Enumerations
+- Repository contracts
 
-### 🔄 Returns Management
-* **Sales Returns**: Handles items returned by customers, tracks reasons (damaged, wrong item), and issues credit or processes returns.
-* **Purchase Returns**: Processes returns to suppliers for damaged or expired items, subtracting inventory from specific batches.
+### Key Entities
 
-### 🕒 Shift Tracking
-* Cashiers and pharmacists can open and close shifts.
-* Logs shift open times, close times, and associated users to ensure cash-drawer accountability.
-
-### 🛡️ Security, Identity & Audit
-* Powered by ASP.NET Core Identity.
-* **Role-Based Access Control (RBAC)**: Distinct permissions for `Administrator`, `Pharmacist`, and `Cashier`.
-* **Audit Trails**: Automatically logs modifications, updates, and key user actions to `AuditLogs` and `UserActivities`.
-
-### 📊 Advanced Reports & Dashboards
-* Real-time analytical dashboard displaying sales, purchases, and profit metrics.
-* Generate and download custom Excel reports via `ClosedXML` and beautiful PDFs via `QuestPDF`.
+- Products
+- Product Brands
+- Product Types
+- Customer Basket
+- Basket Items
+- Orders
+- Order Items
+- Delivery Methods
+- Order Address
 
 ---
 
-## 🔑 Default Seeded Accounts
+## 2️⃣ Application Layer
 
-The application automatically seeds three default roles and user accounts into the identity database on startup:
+**Technology**
 
-| Role | Username / Email | Password | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Administrator** | `admin@pharmacy.com` | `Admin@123` | Complete access to user management, logs, reports, and settings. |
-| **Pharmacist** | `pharmacist@pharmacy.com` | `Pharma@123` | Access to medicine management, inventory, purchases, and stock reports. |
-| **Cashier** | `cashier@pharmacy.com` | `Cashier@123` | Access to POS checkout, customer profiles, sales invoices, and sales returns. |
+- C# Class Library
+
+### Responsibilities
+
+- Business use cases
+- Service orchestration
+- DTOs
+- Interfaces
+- Mapping
+- Dependency inversion
+
+### Components
+
+- Product Service
+- Basket Service
+- Order Service
+- Payment Service
+- Authentication Service
+- Contracts
+- DTOs
+- AutoMapper Profiles
 
 ---
 
-## 🚀 Getting Started
+## 3️⃣ Infrastructure Layer
 
-### 📋 Prerequisites
-* [.NET SDK 10.0](https://dotnet.microsoft.com/download/dotnet/10.0) or higher.
-* [MS SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (LocalDB, Express, or Developer edition).
+**Technology**
 
-### ⚙️ Database Configuration
-Update the database connection string in the `PharmacyManagement.PL/appsettings.json` file if your local SQL Server instance is different:
+- Entity Framework Core 8
+- SQL Server
+- Redis
+- Stripe
+
+### Responsibilities
+
+- Database access
+- Repository implementations
+- Identity management
+- Payment processing
+- External integrations
+
+### Components
+
+- StoreDbContext
+- StoreIdentityDbContext
+- Generic Repository
+- Unit of Work
+- Basket Repository
+- Redis Cache
+- JWT Token Service
+- Stripe Payment Gateway
+
+---
+
+## 4️⃣ Presentation Layer (API)
+
+**Technology**
+
+- ASP.NET Core Web API
+
+### Responsibilities
+
+- HTTP Endpoints
+- Request Validation
+- Middleware
+- Dependency Injection
+- Swagger Documentation
+
+### Controllers
+
+- AuthenticationController
+- ProductsController
+- BasketsController
+- OrdersController
+- PaymentController
+
+---
+
+# 🛠 Technology Stack
+
+| Category | Technology |
+|----------|------------|
+| Framework | .NET 8 |
+| API | ASP.NET Core Web API |
+| ORM | Entity Framework Core 8 |
+| Database | SQL Server |
+| Cache | Redis |
+| Authentication | ASP.NET Core Identity |
+| Authorization | JWT Bearer Tokens |
+| Payment | Stripe |
+| Mapping | AutoMapper |
+| Documentation | Swagger / OpenAPI |
+
+---
+
+# 🏛 Design Patterns
+
+- Clean Architecture
+- Domain-Driven Design (DDD)
+- Repository Pattern
+- Unit of Work
+- Dependency Injection
+- Specification Pattern
+- SOLID Principles
+
+---
+
+# 📂 Project Structure
+
+```text
+E_Commerce
+│
+├── E_Commerce.slnx
+│
+├── E_Commerce.API
+│   ├── Controllers
+│   ├── Extensions
+│   ├── Files
+│   ├── Program.cs
+│   └── appsettings.json
+│
+├── E_Commerce.Application
+│   ├── Services
+│   ├── Contracts
+│   ├── DTOs
+│   └── Profiles
+│
+├── E_Commerce.Infrastructure
+│   ├── Data
+│   ├── Identity
+│   ├── Repositories
+│   ├── Payment
+│   └── DataSeeding
+│
+└── E_Commerce.Domain
+    ├── Entities
+    └── Contracts
+```
+
+---
+
+# 🌟 Features
+
+## 🛍️ Product Catalog
+
+- Product Search
+- Product Filtering
+- Product Pagination
+- Brand Filtering
+- Type Filtering
+- Specification Pattern
+- Image URL Mapping
+
+---
+
+## 🛒 Shopping Basket
+
+- Redis-backed Basket Storage
+- High Performance Caching
+- Basket Synchronization
+- Basket Persistence
+
+---
+
+## 💳 Stripe Payment
+
+- Payment Intent Creation
+- Payment Updates
+- Secure Checkout
+- Stripe Integration
+
+---
+
+## 📦 Order Management
+
+- Create Orders
+- Order History
+- Delivery Methods
+- Shipping Address
+- Order Status Tracking
+
+---
+
+## 🔐 Authentication & Authorization
+
+- ASP.NET Core Identity
+- JWT Authentication
+- Secure Login
+- User Registration
+- Protected Endpoints
+
+---
+
+## 📄 API Documentation
+
+- Swagger UI
+- OpenAPI
+- Endpoint Testing
+- API Exploration
+
+---
+
+# 🚀 Getting Started
+
+## 📋 Prerequisites
+
+- .NET 8 SDK
+- SQL Server
+- Redis Server
+- Stripe Account
+
+---
+
+# ⚙ Environment Configuration
+
+Update the configuration inside:
+
+```text
+E_Commerce.API/appsettings.json
+```
+
+Example:
 
 ```json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=.;Database=PharmacyDb;Trusted_Connection=True;TrustServerCertificate=True;"
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=StoreCatalogDb;Trusted_Connection=True;TrustServerCertificate=True;",
+    "IdentityConnection": "Server=.;Database=StoreIdentityDb;Trusted_Connection=True;TrustServerCertificate=True;",
+    "RedisConnection": "localhost:6379"
+  },
+
+  "JWT": {
+    "SecretKey": "YOUR_SECRET_KEY",
+    "Issuer": "ECommerceAPI",
+    "Audience": "ECommerceUsers"
+  },
+
+  "Stripe": {
+    "SecretKey": "sk_test_...",
+    "PublishableKey": "pk_test_...",
+    "WebhookSecret": "whsec_..."
+  }
 }
 ```
 
-### 🏃 Running the Application
+> **Note:** If your project currently uses the configuration section name `"Strip"`, consider renaming it to `"Stripe"` for consistency with the Stripe SDK and common naming conventions.
 
-Open your terminal at the project root directory and execute the following commands:
+---
 
-1. **Restore NuGet dependencies:**
-   ```bash
-   dotnet restore
-   ```
+# ▶ Run the Application
 
-2. **Build the solution:**
-   ```bash
-   dotnet build
-   ```
+Restore packages:
 
-3. **Run the Presentation Layer web project:**
-   ```bash
-   dotnet run --project PharmacyManagement.PL
-   ```
+```bash
+dotnet restore
+```
 
-4. **Access the application:**
-   Open your browser and navigate to the local host URL shown in your terminal (typically `https://localhost:7001` or `http://localhost:5000`).
+Build the solution:
 
-> [!NOTE]
-> Database migrations and identity seed data are checked and applied **automatically** during application startup, so you don't need to manually run `Update-Database`.
-`````
+```bash
+dotnet build
+```
+
+Run the API:
+
+```bash
+dotnet run --project E_Commerce.API
+```
+
+---
+
+# 🌐 API Documentation
+
+After running the application, open:
+
+```
+https://localhost:7001/swagger
+```
+
+or the local URL shown in the terminal.
+
+---
+
+# ℹ Notes
+
+> Database migrations, schema creation, and seed data are applied automatically during application startup.
+
+No manual migration commands are required.
+
+---
+
+# 🚀 Future Improvements
+
+- Refresh Tokens
+- Email Verification
+- Password Reset
+- Docker Support
+- CI/CD Pipeline
+- Azure Deployment
+- Multi-Vendor Marketplace
+- Wishlist
+- Product Reviews
+- Order Notifications
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit your changes.
+4. Push your branch.
+5. Open a Pull Request.
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+---
